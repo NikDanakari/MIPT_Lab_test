@@ -1,5 +1,5 @@
 import numpy as np
-from PIL import Image, ImageQt
+from PIL import Image
 # function that converts CSV file into PIL image
 def csv_to_image(filepath):
     raw_data = np.genfromtxt(filepath, delimiter=';') # read data to NumPy array
