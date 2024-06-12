@@ -10,6 +10,7 @@ class CSVView(QtWidgets.QMainWindow):
         self.model = model
         self.current_index = 0
         self.current_image = None
+        self.pixmap = None
         self.initUI()
 
     def initUI(self):
@@ -79,8 +80,8 @@ class CSVView(QtWidgets.QMainWindow):
             # if input is correct method will show the image
             else:
                 qimage = ImageQt.ImageQt(self.current_image)
-                pixmap = QPixmap.fromImage(qimage)
-                self.image_label.setPixmap(pixmap.scaled(self.image_label.size(), QtCore.Qt.AspectRatioMode.KeepAspectRatio))
+                self.pixmap = QPixmap.fromImage(qimage)
+                self.image_label.setPixmap(self.pixmap.scaled(self.image_label.size(), QtCore.Qt.AspectRatioMode.KeepAspectRatio))
             # delete text label about incorrect input from labels and paths lists
             if type(self.model.image_labels[-1]) == str:
                 del self.model.image_labels[-1]
@@ -99,8 +100,6 @@ class CSVView(QtWidgets.QMainWindow):
     def save_image(self):
         if len(self.model.image_labels) > 0:
             self.current_image = self.model.get_current_image(self.current_index)
-            qimage = ImageQt.ImageQt(self.current_image)
-            pixmap = QPixmap.fromImage(qimage)
             filename, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Image", "", "PNG Files (*.png);;BMP Files (*.bmp);;JPEG Files (*.jpg)") # enables saving in neccessary formats
             if filename:
-                pixmap.save(filename)
+                self.pixmap.save(filename)
