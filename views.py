@@ -60,10 +60,10 @@ class CSVView(QtWidgets.QMainWindow):
         self.setCentralWidget(self.centralwidget)
 
     def open_csv(self):
-        select_files = QtWidgets.QFileDialog()
+        select_files = QtWidgets.QFileDialog() # dialog window to choose files
         select_files.setFileMode(QtWidgets.QFileDialog.FileMode.ExistingFiles)
-        select_files.setNameFilter("CSV files (*.csv)")
-
+        select_files.setNameFilter("CSV files (*.csv)") # filter to choose CSV files only
+        # if user clicks "Open"
         if select_files.exec() == QtWidgets.QFileDialog.DialogCode.Accepted:
             file_paths = select_files.selectedFiles()
             for filepath in file_paths:
@@ -72,25 +72,28 @@ class CSVView(QtWidgets.QMainWindow):
 
     def show_image(self):
         if len(self.model.image_labels) > 0:
-            self.current_image = self.model.get_current_image(self.current_index)
+            self.current_image = self.model.get_current_image(self.current_index) # get current image
+            # if input is incorrect csv_processor will return a string
             if type(self.current_image) == str:
                 self.image_label.setText("You have chosen an incorrect CSV file")
+            # if input is correct method will show the image
             else:
                 qimage = ImageQt.ImageQt(self.current_image)
                 pixmap = QPixmap.fromImage(qimage)
                 self.image_label.setPixmap(pixmap.scaled(self.image_label.size(), QtCore.Qt.AspectRatioMode.KeepAspectRatio))
+            # delete text label about incorrect input from labels and paths lists
             if type(self.model.image_labels[-1]) == str:
                 del self.model.image_labels[-1]
                 del self.model.image_paths[-1]
 
     def prev_image(self):
         if len(self.model.image_labels) > 0:
-            self.current_index = (self.current_index - 1) % len(self.model.image_labels)
+            self.current_index = (self.current_index - 1) % len(self.model.image_labels) # calc previous image index with looping
             self.show_image()
 
     def next_image(self):
         if len(self.model.image_labels) > 0:
-            self.current_index = (self.current_index + 1) % len(self.model.image_labels)
+            self.current_index = (self.current_index + 1) % len(self.model.image_labels) # calc next image index with looping
             self.show_image()
 
     def save_image(self):
@@ -98,6 +101,6 @@ class CSVView(QtWidgets.QMainWindow):
             self.current_image = self.model.get_current_image(self.current_index)
             qimage = ImageQt.ImageQt(self.current_image)
             pixmap = QPixmap.fromImage(qimage)
-            filename, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Image", "", "PNG Files (*.png);;BMP Files (*.bmp);;JPEG Files (*.jpg)")
+            filename, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Image", "", "PNG Files (*.png);;BMP Files (*.bmp);;JPEG Files (*.jpg)") # enables saving in neccessary formats
             if filename:
                 pixmap.save(filename)
