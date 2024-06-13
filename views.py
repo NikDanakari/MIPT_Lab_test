@@ -1,6 +1,6 @@
 import PyQt6.QtWidgets as QtWidgets
 from PIL import ImageQt
-from PyQt6.QtGui import QPixmap
+from PyQt6.QtGui import QPixmap, QImage
 import PyQt6.QtCore as QtCore
 
 
@@ -79,7 +79,12 @@ class CSVView(QtWidgets.QMainWindow):
                 self.image_label.setText("You have chosen an incorrect CSV file")
             # if input is correct method will show the image
             else:
-                qimage = ImageQt.ImageQt(self.current_image)
+                # draw image according to mode
+                if self.current_image.mode == "RGB":
+                    data = self.current_image.tobytes("raw","RGB")
+                    qimage = QImage(data, self.current_image.size[0], self.current_image.size[1], QImage.Format.Format_RGB888)
+                else:
+                    qimage = ImageQt.ImageQt(self.current_image)
                 self.pixmap = QPixmap.fromImage(qimage)
                 self.image_label.setPixmap(self.pixmap.scaled(self.image_label.size(), QtCore.Qt.AspectRatioMode.KeepAspectRatio))
             # delete text label about incorrect input from labels and paths lists
